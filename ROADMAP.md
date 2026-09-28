@@ -20,37 +20,38 @@ Play Store account.
 | Writes a test checklist for each device test | Reports caret jumps, lost or duplicated text, or anything that feels wrong |
 | Drafts the privacy policy, store listing, and billing code | Owns the Play Console account, testers, payments, and taxes |
 
-**Build loop:** each step goes on its own branch. Claude pushes it, and GitHub
-Actions runs the tests and builds a debug APK. You download the APK from the
-Actions run, install it on your phone, try it, and report back. You don't need
-Android Studio for this loop. It's still useful for emulators and faster local
-builds.
+**Build loop:** each step goes on its own branch. Claude builds and tests it,
+then pushes it, and GitHub Actions builds a debug APK on every push. Claude
+can also send you the APK directly in chat. You install it on your Pixel, try
+it, and report back. See the README for install steps. You don't need Android
+Studio.
 
-> This cloud environment can't reach `dl.google.com` (the Android SDK) or
-> `fountain.io` (sample scripts). Claude can build and test the pure-Kotlin core
-> here, but APKs are built in CI. To let Claude build APKs in-session, add both
-> hosts to the environment's allowed domains.
+**Test hardware:** a Pixel (Gboard, plus SwiftKey from Play), a Bluetooth
+keyboard, and a Chromebook. There's no Samsung device, so Samsung Keyboard
+coverage comes from beta testers (Phase 4). The cloud environment has no
+emulator, so every on-screen and keyboard check happens on your devices.
 
 ---
 
 ## Phase 0: Setup
 
-- [ ] **You:** choose a working app name and a permanent application ID (for
-      example `com.yourname.screenwriter`). The ID can't change once the app is
-      on Play.
-- [ ] **You:** on your phone, enable Developer options and allow installing
-      apps from your browser or file manager.
-- [ ] **You:** list your test hardware. Ideally that's a Samsung phone plus a
-      tablet or Chromebook with a Bluetooth keyboard, with Gboard and SwiftKey
-      installed.
-- [ ] **Claude:** set up a Gradle multi-module project (§6) with a version
-      catalog, `targetSdk 36`, `minSdk 26`, and an empty Compose app.
-- [ ] **Claude:** add CI that runs the `core` tests, builds a debug APK as a
-      downloadable artifact, and runs a dependency license check that fails on
-      GPL, AGPL, or LGPL.
+- [x] **You:** choose the app name and permanent application ID: ScreenWriter,
+      `com.boliby.screenwriter`. Debug builds use `com.boliby.screenwriter.debug`
+      so they can sit next to the Play version.
+- [x] **You:** list your test hardware: a Pixel, a Chromebook, and a Bluetooth
+      keyboard.
+- [x] **Claude:** set up a Gradle project (§6) with `:app` and `:core-model`,
+      a version catalog, `compileSdk 37`, `targetSdk 37`, `minSdk 26` (Android
+      8+), and a placeholder Compose screen. Compose 1.12 requires compileSdk 37.
+      Play requires targetSdk 36 or higher.
+- [x] **Claude:** add CI that runs tests, lint, and a dependency license check
+      that allows only Apache, MIT, BSD, and MPL, and builds a debug APK on
+      every push. The debug signing key is committed so each build installs
+      over the previous one.
+- [ ] **You:** install the placeholder APK on your Pixel. The first time,
+      Android asks you to allow installs from the app you opened it with.
 
-**Done when:** CI is green and you've installed the placeholder APK from a CI
-run on your phone.
+**Done when:** CI is green and the placeholder opens on your Pixel.
 
 ## Phase 1: Risk spikes (go/no-go)
 
@@ -67,7 +68,8 @@ you test 1A.
 - [ ] **Claude:** write the IME test script: tap-correct mid-word, accept a
       suggestion, swipe typing, Enter mid-word, Backspace-merge, voice input,
       paste, and hardware keys.
-- [ ] **You:** type about 5 pages with each keyboard, following the script.
+- [ ] **You:** type about 5 pages with each keyboard on your Pixel, following
+      the script: Gboard, SwiftKey, and the Bluetooth keyboard.
 
 **Done when:** no text is lost or duplicated on any keyboard. **Go:** keep the
 block editor. **No-go:** switch to the single-field Fountain editor (§5.3). The
@@ -93,6 +95,11 @@ core, paginator, and exporters stay the same either way.
 **Done when:** the exported `.fdx` opens cleanly.
 
 **Checkpoint:** record the block-editor or single-field decision in `CLAUDE.md`.
+
+**Optional now, required by Phase 4:** register the Play Console account
+($25 and a government ID). Identity checks can take days. Once it's set up,
+Play's internal testing track is the easiest way to get builds onto your
+Chromebook, which can't just open an APK file the way a phone can.
 
 ## Phase 2: MVP (good enough for your own writing)
 
@@ -155,10 +162,12 @@ pages scroll smoothly, and a 2-week beta has no data loss.
 
 Start this during Phase 3. The closed test alone takes at least 14 days.
 
-- [ ] **You:** register a Play Console account ($25 and a government ID).
-      Register early, because identity verification can take time.
+- [ ] **You:** register a Play Console account ($25 and a government ID), if
+      you didn't during Phase 1.
 - [ ] **You:** recruit 15–20 testers. Play requires 12 opted-in testers for 14
-      continuous days.
+      continuous days. Include several people with Samsung Galaxy phones: they
+      supply the Samsung Keyboard coverage you can't test yourself. Claude gives
+      them the IME test script.
 - [ ] **Claude:** host the privacy policy on GitHub Pages, draft the data
       safety answers and store listing, add Play Billing for the one-time
       unlock, and set up release signing and AAB builds in CI.

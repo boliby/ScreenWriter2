@@ -26,12 +26,30 @@ Jetpack Compose.
 - **Fountain:** the writer always forces elements whose type could be inferred
   wrongly (`.`, `@`, `!`, `>`), so saved files re-parse identically.
 - **FDX:** keep unknown attributes and nodes, and write them back unchanged.
-- **Target SDK:** `targetSdk 36`.
+- **SDK levels:** `compileSdk 37`, `targetSdk 37`, `minSdk 26`. Play requires
+  targetSdk 36 or higher.
 - **Device testing:** a change that affects keyboard input isn't done until the
   user has tested it on real keyboards. Say so in the PR or summary.
 
-## Environment
+## Working with the user
 
-Cloud sessions have Java 21 and Gradle but no Android SDK, because
-`dl.google.com` is blocked. Build and test `core-*` modules here. The `:app`
-module and APKs are built in GitHub Actions.
+The user tests and decides but doesn't read code. Report in plain language:
+what changed, what to try on the device, and what a pass looks like. After
+building an APK, send it with SendUserFile so the user can install it without
+going through GitHub.
+
+Test hardware: a Pixel (Gboard, SwiftKey), a Bluetooth keyboard, and a
+Chromebook. There's no Samsung device.
+
+## Building
+
+Cloud sessions have Java 21 but no Android SDK and no emulator.
+
+```sh
+scripts/install-android-sdk.sh   # once per session; writes local.properties
+./gradlew check assembleDebug    # tests, lint, license check, debug APK
+```
+
+The APK lands in `app/build/outputs/apk/debug/`. Maven Central sometimes
+returns HTTP 429. Retry the build if that happens. CI
+(`.github/workflows/ci.yml`) runs the same command on every push.
