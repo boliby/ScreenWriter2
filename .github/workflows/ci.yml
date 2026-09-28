@@ -31,6 +31,12 @@ jobs:
           path: samples
           key: samples-${{ hashFiles('scripts/samples.sha256') }}
 
+      # Robolectric downloads its Android images into the Maven cache.
+      - uses: actions/cache@v6
+        with:
+          path: ~/.m2/repository/org/robolectric
+          key: robolectric-${{ hashFiles('gradle/libs.versions.toml') }}
+
       - name: Download sample scripts
         run: scripts/fetch-samples.sh
 

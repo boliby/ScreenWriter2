@@ -71,6 +71,13 @@ Tests that need them pass quietly without them, except in CI, which sets
 `REQUIRE_SAMPLES`. Golden-test reports, with both layouts row by row, are in
 `golden-tests/build/reports/pagination/`.
 
+`app` has Robolectric smoke tests (`AppSmokeTest`) that launch the real app on
+simulated Android and drive the editor. They catch crashes and broken wiring
+that the JVM-only core tests can't, so extend them whenever the app changes.
+They can't judge keyboard behavior; that still needs the user's devices.
+Watch for Android-only rules the core can't see, such as `LazyColumn` keys
+having to be Bundle-saveable (a raw `Long`, never `BlockId`).
+
 The APK lands in `app/build/outputs/apk/debug/`. Maven Central sometimes
 returns HTTP 429. Retry the build if that happens. CI
 (`.github/workflows/ci.yml`) runs the same command on every push.

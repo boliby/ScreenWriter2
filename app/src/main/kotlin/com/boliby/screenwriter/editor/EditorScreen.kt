@@ -126,7 +126,8 @@ fun EditorScreen(editor: EditorState) {
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 48.dp),
                 ) {
-                    itemsIndexed(editor.blocks, key = { _, block -> block.id }) { index, block ->
+                    // Keys must be types Android can save in a Bundle, so the raw Long, not BlockId.
+                    itemsIndexed(editor.blocks, key = { _, block -> block.id.value }) { index, block ->
                         BlockField(editor, block, inch, first = index == 0)
                     }
                 }
