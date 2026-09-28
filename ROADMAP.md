@@ -71,28 +71,51 @@ you test 1A.
       paste, and hardware keys. The Enter/Tab/Backspace rules (§2.4) live in
       `core-format` with tests, ready for Phase 2.1.
 - [ ] **You:** type about 5 pages with each keyboard on your Pixel, following
-      the script: Gboard, SwiftKey, and the Bluetooth keyboard.
+      the script: Gboard, SwiftKey, and the Bluetooth keyboard. *First pass:
+      a scene using every element, with no problems.*
 
 **Done when:** no text is lost or duplicated on any keyboard. **Go:** keep the
 block editor. **No-go:** switch to the single-field Fountain editor (§5.3). The
 core, paginator, and exporters stay the same either way.
 
 ### 1B. Pagination against a reference PDF (§3.1–3.3)
-- [ ] **You:** get the *Big Fish* `.fountain` and `.pdf` samples from
-      fountain.io and commit them to `samples/`, or let Claude fetch them.
-      If you can get a Final Draft trial or the Fade In demo, export a
-      couple more reference PDFs.
-- [ ] **Claude:** write a minimal Fountain parser, a character-grid line
-      wrapper, and a paginator, plus a golden test that compares page-start
-      text with the reference PDF.
+- [x] **Claude:** fetch the fountain.io samples (*Big Fish*, *Brick & Steel*,
+      *The Last Birthday Card*) with `scripts/fetch-samples.sh`. They're
+      copyrighted and this repository is public, so they're checksummed but
+      not committed.
+- [x] **Claude:** write the Fountain parser (`core-fountain`), a
+      character-grid line wrapper and paginator (`core-layout`), and golden
+      tests (`golden-tests`) that compare page starts with Final Draft's PDFs.
+- [ ] **You (optional):** with a Final Draft trial or the Fade In demo, export
+      a couple more reference PDFs, especially TV and dual dialogue.
 
 **Done when:** *Big Fish* paginates within ±2 pages of the reference PDF.
+**Result:** done, and past the v1.0 target. Laid out from their `.fdx` files
+with each script's own formatting:
+
+| Script | Pages vs Final Draft | Page starts on the same page |
+|---|---|---|
+| *Big Fish* | 120 vs 120 | 116 of 120 (97%) |
+| *Brick & Steel* | 4 vs 4 | 4 of 4 |
+| *The Last Birthday Card* | 20 vs 20 | 20 of 20 |
+
+The four *Big Fish* misses are one song set in a 10-point proportional font;
+the layout grid assumes Courier. What the calibration found: a 6" column holds
+61 characters, a speech split across pages puts (MORE) and the (CONT'D) cue
+in the margins, a split falls between sentences and re-wraps each half,
+a parenthetical may end a page above (MORE), and a scene heading keeps all of
+a paragraph that can't split.
 
 ### 1C. FDX round-trip (§4.2)
-- [ ] **Claude:** write an FDX reader and writer that keep unknown XML intact,
-      with round-trip tests on *Brick & Steel*.
-- [ ] **You:** open the exported `.fdx` in the Fade In demo or a Final Draft
-      trial.
+- [x] **Claude:** write an FDX reader and writer (`core-fdx`) that keep
+      unknown XML intact. All three samples round-trip unchanged, edited
+      paragraphs keep their other attributes, and a Fountain script converts
+      to FDX and back. Imported files also keep their page formatting
+      (`FdxTemplate`).
+- [ ] **You:** open `fdx-check.fdx`, a short test script using every element,
+      in Final Draft, Fade In, or a web app that imports FDX, such as
+      WriterDuet or Arc Studio. Check that every element has the right type
+      and styles.
 
 **Done when:** the exported `.fdx` opens cleanly.
 

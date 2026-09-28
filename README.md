@@ -22,6 +22,7 @@ Requires JDK 17 or newer and the Android SDK.
 
 ```sh
 scripts/install-android-sdk.sh   # only if you have no Android SDK
+scripts/fetch-samples.sh         # sample scripts for the page-break tests
 ./gradlew check assembleDebug    # tests, lint, license check, debug APK
 ```
 

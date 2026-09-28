@@ -41,14 +41,32 @@ going through GitHub.
 Test hardware: a Pixel (Gboard, SwiftKey), a Bluetooth keyboard, and a
 Chromebook. There's no Samsung device.
 
+## Modules
+
+- `core-model`: script, blocks, spans (§2.9)
+- `core-format`: Enter/Tab/Backspace rules (§2.4)
+- `core-fountain`: Fountain parser (§4.1)
+- `core-layout`: line wrapping, page templates, pagination (§3)
+- `core-fdx`: Final Draft reader, writer, and page template (§4.2)
+- `golden-tests`: page breaks compared with Final Draft PDFs (§9)
+- `testing`: test helpers; `app`: the Android app
+- `build-logic`: shared Gradle conventions, including the license allowlist
+
 ## Building
 
 Cloud sessions have Java 21 but no Android SDK and no emulator.
 
 ```sh
 scripts/install-android-sdk.sh   # once per session; writes local.properties
+scripts/fetch-samples.sh         # fountain.io samples for the golden tests
 ./gradlew check assembleDebug    # tests, lint, license check, debug APK
 ```
+
+The samples are copyrighted and the repository is public, so they stay out of
+git (`samples/` is ignored) and are checked against `scripts/samples.sha256`.
+Tests that need them pass quietly without them, except in CI, which sets
+`REQUIRE_SAMPLES`. Golden-test reports, with both layouts row by row, are in
+`golden-tests/build/reports/pagination/`.
 
 The APK lands in `app/build/outputs/apk/debug/`. Maven Central sometimes
 returns HTTP 429. Retry the build if that happens. CI

@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -31,3 +32,8 @@ rootProject.name = "ScreenWriter"
 include(":app")
 include(":core-model")
 include(":core-format")
+include(":core-fountain")
+include(":core-layout")
+include(":core-fdx")
+include(":golden-tests")
+include(":testing")

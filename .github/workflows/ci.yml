@@ -24,8 +24,20 @@ jobs:
           java-version: 21
           cache: gradle
 
+      # The golden tests compare against fountain.io's sample scripts, which are
+      # copyrighted and not in git.
+      - uses: actions/cache@v6
+        with:
+          path: samples
+          key: samples-${{ hashFiles('scripts/samples.sha256') }}
+
+      - name: Download sample scripts
+        run: scripts/fetch-samples.sh
+
       - name: Test, lint, check licenses, and build the debug APK
         run: ./gradlew check assembleDebug
+        env:
+          REQUIRE_SAMPLES: "1"
 
       - name: Name the APK after the commit
         run: cp app/build/outputs/apk/debug/app-debug.apk "ScreenWriter-dev-${GITHUB_SHA::7}.apk"

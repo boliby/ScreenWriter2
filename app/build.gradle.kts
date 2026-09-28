@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.licensee)
+    id("screenwriter.licenses")
 }
 
 android {
@@ -53,12 +53,4 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     debugImplementation(libs.androidx.compose.ui.tooling)
-}
-
-licensee {
-    allow("Apache-2.0")
-    allow("MIT")
-    allow("BSD-2-Clause")
-    allow("BSD-3-Clause")
-    allow("MPL-2.0")
 }
