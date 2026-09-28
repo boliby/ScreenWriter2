@@ -48,7 +48,7 @@ emulator, so every on-screen and keyboard check happens on your devices.
       that allows only Apache, MIT, BSD, and MPL, and builds a debug APK on
       every push. The debug signing key is committed so each build installs
       over the previous one.
-- [ ] **You:** install the placeholder APK on your Pixel. The first time,
+- [x] **You:** install the placeholder APK on your Pixel. The first time,
       Android asks you to allow installs from the app you opened it with.
 
 **Done when:** CI is green and the placeholder opens on your Pixel.
@@ -60,14 +60,16 @@ built on top of them. 1B and 1C are pure Kotlin, so Claude works on them while
 you test 1A.
 
 ### 1A. Block editor on real keyboards (§2.8, §5.2)
-- [ ] **Claude:** build a throwaway editor. It shows a `LazyColumn` of
+- [x] **Claude:** build a throwaway editor. It shows a `LazyColumn` of
       `BasicTextField(TextFieldState)`. Enter splits a block through
       `InputTransformation`, Backspace merges blocks, headings display in
       uppercase through `OutputTransformation`, and it handles Tab and
       Enter from a hardware keyboard.
-- [ ] **Claude:** write the IME test script: tap-correct mid-word, accept a
+- [x] **Claude:** write the IME test script
+      ([`docs/testing/keyboard-test.md`](docs/testing/keyboard-test.md)): tap-correct mid-word, accept a
       suggestion, swipe typing, Enter mid-word, Backspace-merge, voice input,
-      paste, and hardware keys.
+      paste, and hardware keys. The Enter/Tab/Backspace rules (§2.4) live in
+      `core-format` with tests, ready for Phase 2.1.
 - [ ] **You:** type about 5 pages with each keyboard on your Pixel, following
       the script: Gboard, SwiftKey, and the Bluetooth keyboard.
 

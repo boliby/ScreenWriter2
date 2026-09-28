@@ -30,3 +30,4 @@ rootProject.name = "ScreenWriter"
 
 include(":app")
 include(":core-model")
+include(":core-format")
