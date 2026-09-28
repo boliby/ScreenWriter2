@@ -13,7 +13,7 @@ Settings > System > Keyboard.
 ## Not in this build (not bugs)
 
 - Nothing is saved. Closing the app loses your text. Rotating the phone keeps it.
-- No undo, autocomplete, automatic parentheses, or (CONT'D).
+- No autocomplete, automatic parentheses, or (CONT'D).
 - The layout is rough. Only the typing matters here.
 
 ## How it works
@@ -81,6 +81,31 @@ Connect the keyboard to the Pixel and tap into a line.
   the line above; Down from the last row goes to the line below.
 - Type fast: press Enter and immediately type the next line. The first letters
   should land on the new line, not the old one.
+
+## Undo and redo (build 0.2.0)
+
+**Undo** and **Redo** are at the left of the element bar. On the Bluetooth
+keyboard they're **Ctrl+Z** and **Ctrl+Shift+Z** (or **Ctrl+Y**). Typing
+without a pause of about a second counts as one step.
+
+1. **Typing.** Type a sentence, pause, and type another. Undo removes the
+   second sentence, then the first. Redo brings them back.
+2. **Enter.** Press Enter in the middle of a line, then Undo.
+   *Pass:* the two halves join back into one line with the cursor where you
+   pressed Enter.
+3. **Backspace join.** Join two lines with Backspace, then Undo. They split
+   again.
+4. **Element changes.** Change a line's element with Tab or a chip, then Undo.
+   It goes back to the element it was.
+5. **Paste.** Paste several lines, then Undo. The whole paste disappears in
+   one step.
+6. **Mixed.** Do a few of the above, then Undo all the way back and Redo all
+   the way forward.
+   *Pass:* every step comes back exactly, no text is lost or doubled, and
+   the keyboard stays up throughout.
+7. **With each keyboard.** Repeat 1 and 2 on Gboard, SwiftKey, and the
+   Bluetooth keyboard. Also try Undo while a word is still underlined as you
+   type it.
 
 ## Reporting a problem
 

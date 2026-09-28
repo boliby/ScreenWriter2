@@ -9,6 +9,9 @@ Jetpack Compose.
 
 ## Rules
 
+- **Editor design (decided in Phase 1):** one text field per screenplay
+  element, in a lazy list. It passed the keyboard tests on Gboard, SwiftKey,
+  and a Bluetooth keyboard, so the single-field fallback (§5.3) isn't needed.
 - **Licenses:** no GPL, AGPL, or LGPL dependencies or code. That rules out
   Beat, Trelby, STARC, iText, and Sora Editor. Don't reproduce code from those
   projects from memory. Apache, MIT, BSD, MPL, and OFL are fine.

@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
@@ -80,7 +81,7 @@ private fun label(type: ElementType) = when (type) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SpikeEditorScreen(editor: SpikeEditorState) {
+fun EditorScreen(editor: EditorState) {
     val listState = rememberLazyListState()
     val nudge = with(LocalDensity.current) { 96.dp.toPx() }
 
@@ -102,7 +103,7 @@ fun SpikeEditorScreen(editor: SpikeEditorState) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Keyboard test") },
+                title = { Text("ScreenWriter") },
                 actions = {
                     TextButton(onClick = editor::loadSample) { Text("Sample") }
                     TextButton(onClick = editor::loadBlank) { Text("Blank") }
@@ -136,17 +137,12 @@ fun SpikeEditorScreen(editor: SpikeEditorState) {
 }
 
 @Composable
-private fun BlockField(editor: SpikeEditorState, block: EditorBlock, inch: Dp, first: Boolean) {
+private fun BlockField(editor: EditorState, block: EditorBlock, inch: Dp, first: Boolean) {
     val input = remember(block) { editor.inputTransformation(block) }
     val pending = editor.pendingFocus
     LaunchedEffect(pending) {
-        if (pending?.blockId == block.id) {
-            try {
-                block.focusRequester.requestFocus()
-                editor.focusApplied(pending)
-            } catch (_: IllegalStateException) {
-                // The field isn't attached; leave the target pending.
-            }
+        if (pending?.blockId == block.id && block.focusRequester.requestFocus(FocusDirection.Enter)) {
+            editor.focusApplied(pending)
         }
     }
 
@@ -205,13 +201,21 @@ private fun keyboardOptionsFor(type: ElementType): KeyboardOptions {
     )
 }
 
-private fun handleKey(event: KeyEvent, editor: SpikeEditorState, block: EditorBlock): Boolean {
+private fun handleKey(event: KeyEvent, editor: EditorState, block: EditorBlock): Boolean {
     if (event.type != KeyEventType.KeyDown) return false
     val selection = block.state.selection
     val atStart = selection.collapsed && selection.start == 0
     val atEnd = selection.collapsed && selection.end == block.state.text.length
     val shortcut = shortcutKeys.indexOf(event.key)
     return when {
+        event.isCtrlPressed && (event.key == Key.Y || (event.key == Key.Z && event.isShiftPressed)) -> {
+            editor.redo()
+            true
+        }
+        event.isCtrlPressed && event.key == Key.Z -> {
+            editor.undo()
+            true
+        }
         event.key == Key.Tab && event.isShiftPressed -> {
             editor.shiftTab(block)
             true
@@ -244,9 +248,9 @@ private fun onLastLine(block: EditorBlock): Boolean {
     return layout.getLineForOffset(block.state.selection.end) == layout.lineCount - 1
 }
 
-/** Sits above the soft keyboard: Tab, plus a chip for each element. */
+/** Sits above the soft keyboard: undo and redo, Tab, and a chip for each element. */
 @Composable
-private fun ElementBar(editor: SpikeEditorState, block: EditorBlock) {
+private fun ElementBar(editor: EditorState, block: EditorBlock) {
     Surface(tonalElevation = 3.dp, modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -255,6 +259,8 @@ private fun ElementBar(editor: SpikeEditorState, block: EditorBlock) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            TextButton(onClick = editor::undo, enabled = editor.canUndo) { Text("Undo") }
+            TextButton(onClick = editor::redo, enabled = editor.canRedo) { Text("Redo") }
             OutlinedButton(onClick = { editor.tab(block) }) { Text("Tab") }
             for (type in barTypes) {
                 FilterChip(

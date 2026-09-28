@@ -70,9 +70,9 @@ you test 1A.
       suggestion, swipe typing, Enter mid-word, Backspace-merge, voice input,
       paste, and hardware keys. The Enter/Tab/Backspace rules (§2.4) live in
       `core-format` with tests, ready for Phase 2.1.
-- [ ] **You:** type about 5 pages with each keyboard on your Pixel, following
-      the script: Gboard, SwiftKey, and the Bluetooth keyboard. *First pass:
-      a scene using every element, with no problems.*
+- [x] **You:** type about 5 pages with each keyboard on your Pixel, following
+      the script: Gboard, SwiftKey, and the Bluetooth keyboard. *Passed on all
+      three.*
 
 **Done when:** no text is lost or duplicated on any keyboard. **Go:** keep the
 block editor. **No-go:** switch to the single-field Fountain editor (§5.3). The
@@ -112,14 +112,15 @@ a paragraph that can't split.
       paragraphs keep their other attributes, and a Fountain script converts
       to FDX and back. Imported files also keep their page formatting
       (`FdxTemplate`).
-- [ ] **You:** open `fdx-check.fdx`, a short test script using every element,
+- [x] **You:** open `fdx-check.fdx`, a short test script using every element,
       in Final Draft, Fade In, or a web app that imports FDX, such as
       WriterDuet or Arc Studio. Check that every element has the right type
-      and styles.
+      and styles. *Imported correctly into WriterDuet.*
 
 **Done when:** the exported `.fdx` opens cleanly.
 
 **Checkpoint:** record the block-editor or single-field decision in `CLAUDE.md`.
+*Decided: the block editor (go).*
 
 **Optional now, required by Phase 4:** register the Play Console account
 ($25 and a government ID). Identity checks can take days. Once it's set up,
@@ -128,9 +129,11 @@ Chromebook, which can't just open an APK file the way a phone can.
 
 ## Phase 2: MVP (good enough for your own writing)
 
-- [ ] **2.1 Core engine (§2.4, §2.9):** script model, `Command` processor,
+- [x] **2.1 Core engine (§2.4, §2.9):** script model, `Command` processor,
       element rules table, and undo/redo with typing coalescing. Tests cover
-      every element × {Enter, Tab} × {empty, non-empty}.
+      every element × {Enter, Tab} × {empty, non-empty}. The editor runs on
+      it, with Undo/Redo in the element bar and Ctrl+Z / Ctrl+Shift+Z.
+      *Needs your keyboard test (build 0.2.0).*
 - [ ] **2.2 Editor UI (§2.7):** element bar above the soft keyboard, block
       swipe to change element, hardware shortcuts (Tab, Shift+Tab,
       Ctrl+1–8, Ctrl+Z/Shift+Z), and per-block caps and autocorrect settings.

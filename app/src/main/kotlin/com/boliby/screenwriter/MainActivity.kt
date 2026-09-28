@@ -6,13 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.boliby.screenwriter.editor.SpikeEditorScreen
-import com.boliby.screenwriter.editor.SpikeEditorState
+import com.boliby.screenwriter.editor.EditorScreen
+import com.boliby.screenwriter.editor.EditorState
 import com.boliby.screenwriter.ui.theme.ScreenWriterTheme
 
 /** Keeps the editor's text through rotation and window resizing. */
 class EditorViewModel : ViewModel() {
-    val editor = SpikeEditorState()
+    val editor = EditorState()
 }
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: EditorViewModel = viewModel()
             ScreenWriterTheme {
-                SpikeEditorScreen(viewModel.editor)
+                EditorScreen(viewModel.editor)
             }
         }
     }
